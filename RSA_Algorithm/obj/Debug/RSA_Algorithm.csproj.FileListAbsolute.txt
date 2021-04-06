@@ -7,3 +7,4 @@ C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\obj\Debug\RSA_Algorithm.
 C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\obj\Debug\RSA_Algorithm.csproj.CoreCompileInputs.cache
 C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\obj\Debug\RSA_Algorithm.exe
 C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\obj\Debug\RSA_Algorithm.pdb
+C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\obj\Debug\RSA_Algorithm.Form1.resources

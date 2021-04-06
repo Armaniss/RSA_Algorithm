@@ -3,23 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
-namespace RSA_algorithm
+namespace RSA_Algorithm
 {
     class RSA
     {
+        
 
         private int p; //p prime skaičius
         private int q; //q prime skaičius
-        private int N;  //q ir p sandauga
+        private int n;  //q ir p sandauga
+        
 
         private int fi; // funkcija fi(N)
 
         private int e; // eksponentės e reikšmė
+        private int d; // 
+
+        
 
         public int getN(int p, int q)
         {
-            return N = p * q;
+            return n = p * q;
         }
 
         public int GetFi(int p, int q)
@@ -53,7 +59,7 @@ namespace RSA_algorithm
             return a;
         }
 
-        bool isPrime(int num1)
+        public bool isPrime(int num1)
         {
             if (num1 == 0 || num1 == 1)
             {
@@ -84,5 +90,39 @@ namespace RSA_algorithm
                 return false;
         }
 
+        public int computeD(int e, int fi)
+        {
+            for (int i = 1; i < 215458575; i++)
+            {
+                if ((i * e) % fi == 1) { return i; }
+            }
+            return 0;
+        }
+       
+        public static string Cipher(string text,int N, int e)
+        {
+            char[] encrypted = text.ToCharArray();
+            for (int i = 0; i < encrypted.Length; i++)
+            {
+                char letter = encrypted[i];
+                //int intLetter = Convert.ToInt32(letter);
+                //intLetter = (intLetter ^ N) % e;
+
+                letter = (char)((letter ^ N)%e);
+
+                if (letter > '~')
+                {
+                    letter = (char)(letter - 94);             
+                }
+                else if (letter < '!')  
+                {
+                    letter = (char)(letter + 94);              
+                }
+
+                encrypted[i] = letter;
+            }
+
+            return new string(encrypted);
+        }
     }
 }

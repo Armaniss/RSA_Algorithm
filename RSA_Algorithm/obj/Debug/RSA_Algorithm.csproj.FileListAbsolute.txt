@@ -1,0 +1,9 @@
+C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\bin\Debug\RSA_Algorithm.exe.config
+C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\bin\Debug\RSA_Algorithm.exe
+C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\bin\Debug\RSA_Algorithm.pdb
+C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\obj\Debug\RSA_Algorithm.csprojAssemblyReference.cache
+C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\obj\Debug\RSA_Algorithm.Properties.Resources.resources
+C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\obj\Debug\RSA_Algorithm.csproj.GenerateResource.cache
+C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\obj\Debug\RSA_Algorithm.csproj.CoreCompileInputs.cache
+C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\obj\Debug\RSA_Algorithm.exe
+C:\Users\Arme6\source\repos\RSA_Algorithm\RSA_Algorithm\obj\Debug\RSA_Algorithm.pdb

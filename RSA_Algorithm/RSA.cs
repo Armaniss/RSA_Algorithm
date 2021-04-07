@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using System.ComponentModel;
+using System.Numerics;
 
 namespace RSA_Algorithm
 {
@@ -18,8 +20,7 @@ namespace RSA_Algorithm
 
         private int fi; // funkcija fi(N)
 
-        private int e; // eksponentės e reikšmė
-        private int d; // 
+        
 
         
 
@@ -37,9 +38,10 @@ namespace RSA_Algorithm
         {
             for (int i = 2; i < fi; i++)
             {
-                if (coprime(i, fi) == true)
+                if (coprime(i, fi) == true && isPrime(i) == true && i != p && i != q && i != fi)
                 {
                     return i;
+                    
                 }
             }
             return 0;
@@ -98,31 +100,71 @@ namespace RSA_Algorithm
             }
             return 0;
         }
-       
-        public static string Cipher(string text,int N, int e)
+        
+        public int findD(int e, int fi)
         {
-            char[] encrypted = text.ToCharArray();
-            for (int i = 0; i < encrypted.Length; i++)
+            return (2 * fi + 1) / e;
+        }       
+
+        static int modInverse(int a, int m)
+        {
+
+            for (int x = 1; x < m; x++)
+                if (((a % m) * (x % m)) % m == 1)
+                    return x;
+            return 1;
+        }     
+
+        public string Cipher(string text, int p,int q)
+        {
+            RSA rsa = new RSA();
+            
+            
+                List <int> ascii = new List<int>();
+                foreach (char letter in text)
+                {
+                    ascii.Add(Convert.ToInt32(letter));
+                }
+                int N = rsa.getN(Convert.ToInt32(p), Convert.ToInt32(q)); // part of public key
+                int fi = rsa.GetFi(Convert.ToInt32(p), Convert.ToInt32(q));                         
+                int E = rsa.GetE(fi);                                     // part if public key
+
+                string encripted = ""; 
+                foreach (int i in ascii)
+                {
+                    encripted += (i^E)%N + " ";
+                }
+                encripted = encripted.Substring(0, encripted.Length - 1);
+
+            return encripted;
+            
+              
+        }
+
+        public string DeCipher(string text, int N, int d)
+        {
+            RSA rsa = new RSA();
+
+            string[] decryptedText = text.Split(' ');
+            int[] encryptedText = new int[decryptedText.Length];
+
+            for (int i = 0; i < decryptedText.Length; i++)
             {
-                char letter = encrypted[i];
-                //int intLetter = Convert.ToInt32(letter);
-                //intLetter = (intLetter ^ N) % e;
-
-                letter = (char)((letter ^ N)%e);
-
-                if (letter > '~')
-                {
-                    letter = (char)(letter - 94);             
-                }
-                else if (letter < '!')  
-                {
-                    letter = (char)(letter + 94);              
-                }
-
-                encrypted[i] = letter;
+                encryptedText[i] = Convert.ToInt32(decryptedText[i]);
             }
 
-            return new string(encrypted);
+            char[] c = new char[encryptedText.Length];
+            string result = "";
+            
+            for (int i = 0; i < encryptedText.Length; i++)
+            {
+                c[i] = (char)((encryptedText[i] ^ d) % N);
+                //c[i] = (char)(Math.Pow(encryptedText[i], d) % N);
+            }
+            
+
+            return new string(c);
         }
+
     }
 }

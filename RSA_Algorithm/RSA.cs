@@ -13,47 +13,46 @@ namespace RSA_Algorithm
     {
         
 
-        private int p; //p prime skaičius
-        private int q; //q prime skaičius
-        private int n;  //q ir p sandauga
-        
+        private BigInteger p; //p prime skaičius
+        private BigInteger q; //q prime skaičius
 
-        private int fi; // funkcija fi(N)
-
-        
-
-        
-
-        public int getN(int p, int q)
+        public BigInteger getN(BigInteger p, BigInteger q)
         {
-            return n = p * q;
+            BigInteger n;
+            n = p * q;
+            return n;
         }
 
-        public int GetFi(int p, int q)
+        public BigInteger GetFi(BigInteger p, BigInteger q)
         {
-            return fi = (p - 1) * (q - 1);
+            BigInteger fi;
+            fi = (p - 1) * (q - 1);
+            return fi;
         }
 
-        public int GetE(int fi)
+        public BigInteger GetE(BigInteger fi)
         {
-            for (int i = 2; i < fi; i++)
+            BigInteger e = 0;
+
+            for(BigInteger i=2; i< fi; i++)
             {
                 if (coprime(i, fi) == true && isPrime(i) == true && i != p && i != q && i != fi)
                 {
-                    return i;
-                    
+                    e = i;
+                    break;
                 }
             }
-            return 0;
+            return e;
+            
         }
 
-        static int GCD(int a, int b)
+        static BigInteger GCD(BigInteger a, BigInteger b)
         {
             int Remainder;
 
             while (b != 0)
             {
-                Remainder = a % b;
+                Remainder = (int)(a % b);
                 a = b;
                 b = Remainder;
             }
@@ -61,7 +60,7 @@ namespace RSA_Algorithm
             return a;
         }
 
-        public bool isPrime(int num1)
+        public bool isPrime(BigInteger num1)
         {
             if (num1 == 0 || num1 == 1)
             {
@@ -83,7 +82,7 @@ namespace RSA_Algorithm
 
         }
 
-        static bool coprime(int a, int b)
+        static bool coprime(BigInteger a, BigInteger b)
         {
 
             if (GCD(a, b) == 1)
@@ -91,79 +90,79 @@ namespace RSA_Algorithm
             else
                 return false;
         }
-
-        public int computeD(int e, int fi)
+       
+        public static bool TryModInverse(BigInteger number, BigInteger modulo, out BigInteger result)
         {
-            for (int i = 1; i < 215458575; i++)
+            if (number < 1) throw new ArgumentOutOfRangeException(nameof(number));
+            if (modulo < 2) throw new ArgumentOutOfRangeException(nameof(modulo));
+            BigInteger n = number;
+            BigInteger m = modulo, v = 0, d = 1;
+            while (n > 0)
             {
-                if ((i * e) % fi == 1) { return i; }
+                BigInteger t = m / n, x = n;
+                n = m % x;
+                m = x;
+                x = d;
+                d = checked(v - t * x); // Just in case
+                v = x;
             }
-            return 0;
+            result = v % modulo;
+            if (result < 0) result += modulo;
+            if ((long)number * result % modulo == 1L) return true;
+            result = default;
+            return false;
         }
+
         
-        public int findD(int e, int fi)
-        {
-            return (2 * fi + 1) / e;
-        }       
-
-        static int modInverse(int a, int m)
-        {
-
-            for (int x = 1; x < m; x++)
-                if (((a % m) * (x % m)) % m == 1)
-                    return x;
-            return 1;
-        }     
-
-        public string Cipher(string text, int p,int q)
+        public string Cipher(string text, BigInteger p,BigInteger q)
         {
             RSA rsa = new RSA();
-            
-            
+           
                 List <int> ascii = new List<int>();
                 foreach (char letter in text)
                 {
                     ascii.Add(Convert.ToInt32(letter));
                 }
-                int N = rsa.getN(Convert.ToInt32(p), Convert.ToInt32(q)); // part of public key
-                int fi = rsa.GetFi(Convert.ToInt32(p), Convert.ToInt32(q));                         
-                int E = rsa.GetE(fi);                                     // part if public key
+                BigInteger N = rsa.getN(p, q);                                   // part of public key
+                BigInteger fi = rsa.GetFi(p, q);                         
+                BigInteger E = rsa.GetE(fi);                                     // part if public key
 
-                string encripted = ""; 
+                string encripted = string.Empty; 
                 foreach (int i in ascii)
-                {
-                    encripted += (i^E)%N + " ";
-                }
+                {                   
+                    encripted += BigInteger.Pow(i, (int)E) % N + " ";
+            }
                 encripted = encripted.Substring(0, encripted.Length - 1);
 
             return encripted;
             
               
         }
+        
+        public string DeCipher(string text, BigInteger N, BigInteger d)
+        {            
+            string[] decText = text.Split(' ');
+            BigInteger[] encText = new BigInteger[decText.Length];
 
-        public string DeCipher(string text, int N, int d)
-        {
-            RSA rsa = new RSA();
-
-            string[] decryptedText = text.Split(' ');
-            int[] encryptedText = new int[decryptedText.Length];
-
-            for (int i = 0; i < decryptedText.Length; i++)
+            for(int i=0; i< decText.Length; i++)
             {
-                encryptedText[i] = Convert.ToInt32(decryptedText[i]);
-            }
-
-            char[] c = new char[encryptedText.Length];
-            string result = "";
-            
-            for (int i = 0; i < encryptedText.Length; i++)
-            {
-                c[i] = (char)((encryptedText[i] ^ d) % N);
-                //c[i] = (char)(Math.Pow(encryptedText[i], d) % N);
+                BigInteger temp = 0;
+                if(BigInteger.TryParse(decText[i], out temp))
+                {
+                    if (temp != 0)
+                    {
+                        encText[i] = BigInteger.Parse(decText[i]);
+                    }
+                }
             }
             
-
-            return new string(c);
+            char[] decrypted = new char[encText.Length];
+            for(int i=0; i<encText.Length; i++)
+            {
+                decrypted[i] = (char)(BigInteger.Pow(encText[i],(int)d) % N);
+                
+            }
+            return new string(decrypted);
         }
 
     }

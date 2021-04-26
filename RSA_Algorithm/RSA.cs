@@ -11,7 +11,6 @@ namespace RSA_Algorithm
 {
     class RSA
     {
-        
 
         private BigInteger p; //p prime skaičius
         private BigInteger q; //q prime skaičius
@@ -91,7 +90,7 @@ namespace RSA_Algorithm
                 return false;
         }
        
-        public static bool TryModInverse(BigInteger number, BigInteger modulo, out BigInteger result)
+        public static bool ModInverse(BigInteger number, BigInteger modulo, out BigInteger result)
         {
             if (number < 1) throw new ArgumentOutOfRangeException(nameof(number));
             if (modulo < 2) throw new ArgumentOutOfRangeException(nameof(modulo));
@@ -103,7 +102,7 @@ namespace RSA_Algorithm
                 n = m % x;
                 m = x;
                 x = d;
-                d = checked(v - t * x); // Just in case
+                d = checked(v - t * x); 
                 v = x;
             }
             result = v % modulo;

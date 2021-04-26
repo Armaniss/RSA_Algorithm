@@ -48,11 +48,10 @@ namespace RSA_Algorithm
                 p++;
             }
             BigInteger q = (N / p);
-            RSA.TryModInverse(E, rsa.GetFi(p, q), out BigInteger result);
+            RSA.ModInverse(E, rsa.GetFi(p, q), out BigInteger result);
             BigInteger d = result;
             
-            tb_EncText.Text = (rsa.DeCipher(tb_Text.Text, N, d));
-            
+            tb_EncText.Text = (rsa.DeCipher(tb_EncText.Text, N, d)); 
         }
 
         private void button1_Click(object sender, EventArgs e)   //Check button
@@ -76,17 +75,6 @@ namespace RSA_Algorithm
             MessageBox.Show("OK");           
         }
         
-        public void TakeFromDB()
-        {
-            SqlCommand cmd3 = con.CreateCommand();
-            cmd3.CommandType = CommandType.Text;
-            cmd3.CommandText = "select * from DataForEncryption where EncryptedResult = '" + tb_Text.Text + "'";
-            cmd3.ExecuteNonQuery();
-            DataTable dt3 = new DataTable();
-            SqlDataAdapter da3 = new SqlDataAdapter(cmd3);
-            da3.Fill(dt3);
-        }
-
         private void button2_Click(object sender, EventArgs e)   //Load From DB button
         {
             try { 
